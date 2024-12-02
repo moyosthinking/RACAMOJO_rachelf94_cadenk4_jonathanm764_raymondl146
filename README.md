@@ -1,4 +1,4 @@
-# Meme Randomizer by: RACAMOJO
+  # Meme Randomizer by: RACAMOJO
 ## Roster
 Moyo Fagbuyi (PM): Frontend; helping with Database & Flask <br>
 Caden Khuu: Flask <br>
@@ -7,8 +7,8 @@ Jonathan Metzler: Database <br>
 All Members: Design Doc & Devlog <br>
 
 ## Description of website
-TBD
-
+Our website will allow logged in users to generate a completely random image, and use that image to create a meme. All users can view memes other users have generated, in the order they generated them. <br>
+##
 ## Install guide
 TBD
 
