@@ -21,4 +21,4 @@ jonathanM -- 2024-12-03 11:55
 cadenK  -- 2024-12-03 11:55
 * Started on init.py
 moyoF  -- 2024-12-03 11:55
-* Tailwind CSS and Homepage
+* Tailwind CSS and Homepage and Readme for keys
