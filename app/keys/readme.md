@@ -9,5 +9,5 @@ A key has been created and is stored in appropriate text file.
 ##
 
 ## Google Fonts API
-A key has not yet been created because the website hates Firefox
+A key has been created and is stored in appropriate text file.
 ##
