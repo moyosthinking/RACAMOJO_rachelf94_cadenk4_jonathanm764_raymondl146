@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<!--
+RACAMOJO -
+SoftDev
+P01
+2024-12-03
+time spent: 30 mins
+-->
+
+<html>
+<head>
+  <title>Log In</title>
+  <link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+  <h1>RACAMOJO Meme Randomizer</h1>
+  <h3>Enter your username and password below to proceed.</h3>
+
+  <form id = "login" action="/check_login" method="POST">
+    <label for="usernameLN">Username:</label><br>
+    <input type="text" required id="username" name="username"> <br><br>
+    <label for="passwordLN">Password:</label><br>
+    <input type="password" required id="password" name="password"> <br><br>
+    <input type="submit" name="sub1" value="Login">
+  </form>
+
+  <div>
+    <p>Don't have an account? <a id="reg" href="/">Register here</a></p>
+  </div>
+</body>
+</html>
