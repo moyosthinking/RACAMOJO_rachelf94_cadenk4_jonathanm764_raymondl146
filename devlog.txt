@@ -34,3 +34,5 @@ Started on init.py
 moyoF  -- 2024-12-03 11:55
 Tailwind CSS and Homepage and Readme for keys
 
+cadenK -- 2024-12-04 11:05
+Work on __init__.py and working on attaching all the HTML pages to it
