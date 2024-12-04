@@ -22,3 +22,5 @@ cadenK  -- 2024-12-03 11:55
 * Started on init.py
 moyoF  -- 2024-12-03 11:55
 * Tailwind CSS and Homepage and Readme for keys
+moyoF  -- 2024-12-04 11:21
+ * Homepage images placeholders
