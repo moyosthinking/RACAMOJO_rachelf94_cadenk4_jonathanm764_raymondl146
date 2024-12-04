@@ -20,7 +20,6 @@ jonathanM -- 2024-12-02 20:09
 Created Database Table
 
 cadenK -- 2024-12-02 19:32
-<<<<<<< HEAD
 Added more descriptions for the API's used
 
 raymondL -- 2024-12-03 11:55
@@ -34,14 +33,4 @@ Started on init.py
 
 moyoF  -- 2024-12-03 11:55
 Tailwind CSS and Homepage and Readme for keys
-=======
-* Added more descriptions for the API's used
-raymondL -- 2024-12-03 11:55
-* Worked on templates + heading and static
-jonathanM -- 2024-12-03 11:55
-* Started on Database
-cadenK  -- 2024-12-03 11:55
-* Started on init.py
-moyoF  -- 2024-12-03 11:55
-* Tailwind CSS and Homepage and Readme for keys
->>>>>>> e1e888398ae2b88cd336958e26d526b70882c1c8
+
