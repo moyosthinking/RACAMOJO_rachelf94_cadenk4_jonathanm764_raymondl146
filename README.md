@@ -34,7 +34,6 @@ cd venv_name/bin/source activate
 2. Navigate to app path
 ```
 cd PATH/TO/RACAMOJO_rachelf94_cadenk4_jonathanm764_raymondl146/app
-
 ```
 3. Run the App
 ```
