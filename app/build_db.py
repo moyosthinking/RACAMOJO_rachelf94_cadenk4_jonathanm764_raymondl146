@@ -15,90 +15,44 @@ def makeDb():
     db = get_db()
     c = db.cursor()
     c.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password TEXT NOT NULL)")
-    c.execute("CREATE TABLE IF NOT EXISTS memes (id INTEGER PRIMARY KEY AUTOINCREMENT, image BLOB, caption TEXT, upvotes INTEGER, FOREIGN KEY(user_id) REFERENCES users(id)")
+    c.execute("CREATE TABLE IF NOT EXISTS memes (id INTEGER PRIMARY KEY AUTOINCREMENT, image BLOB, upvotes INTEGER, user_id INTEGER, FOREIGN KEY(user_id) REFERENCES users(id))")
     db.commit()
 
 # Registers a user with a username and password
 def addUser(u, p):
     db = get_db()
     c = db.cursor()
-    c.execute(INSERT INTO users (username, password) VALUES (?, ?))
+    c.execute("INSERT INTO users (username, password) VALUES (?, ?)")
     exportUsers()
     db.commit()
 
 # Adds a meme to the database
-def addMeme(user, b):
+def addMeme(img, userId):
     db = get_db()
     c = db.cursor()
-    c.execute(UPDATE users SET blogname = ? WHERE username = ?)
-    c.execute(INSERT INTO memes (image, caption, upvotes) VALUES (?,?,0))
+    c.execute("INSERT INTO memes (image, upvotes, id) VALUES (?,0,?)")
     exportBlogs()
     db.commit()
 
 # Gets a list of entries for a specific blog given the blog name
-def getMeme(bname):
+def getMeme(id):
     db = get_db()
     c = db.cursor()
-    c.execute(f"SELECT title, entry, date FROM entries WHERE blogname = '{bname}'")
+    c.execute("SELECT title, entry, date FROM entries WHERE blogname = ?", (id,))
     return c.fetchall()
 
-# Update an existing blog entry
-def updateEntry(oldTitle, newTitle, newText, newDate):
-    db = get_db()
-    c = db.cursor()
-
-    # Update the entry based on the old title
-    c.execute(f'''UPDATE entries
-                 SET title = '{newTitle}', entry = '{newText}', date = '{newDate}'
-                 WHERE title = '{oldTitle}' ''')
-
-    db.commit()
-
 # Gets a specific entry based on title
-def getEntry(title):
+def getMeme(id):
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT blogname, entry, date FROM entries WHERE title = ?", (title,))
+    c.execute("SELECT image, upvotes, date FROM memes WHERE id = ?", (id,))
     return c.fetchone()  # This returns the first matching row, or None if no match is found
-
-# Gets a random entry from the entries table
-def getRandomEntry():
-    db = get_db()
-    c = db.cursor()
-    c.execute("SELECT blogname, title, entry, date FROM entries ORDER BY RANDOM() LIMIT 1")
-    result = c.fetchone()  # Fetches a random entry
-
-    # If no result is found, return a tuple with None values
-    return result if result else (None, None, None, None)
-
-def getMostRecentEntry(username):
-    db = get_db()
-    c = db.cursor()
-    c.execute("""
-        SELECT b.blogname, e.title, e.entry, e.date
-        FROM entries e
-        JOIN blogs b ON e.blogname = b.blogname
-        JOIN users u ON b.blogname = u.blogname
-        WHERE u.username = ?
-        ORDER BY e.date DESC
-        LIMIT 1
-    """, (username,))
-
-    return c.fetchone()
-
-def getEntry(title):
-    db = get_db()
-    c = db.cursor()
-    c.execute("SELECT blogname, entry, date FROM entries WHERE title = ?", (title,))
-    result = c.fetchone()
-    return result
-
 
 # Gets the user's password (for verification purposes)
 def getPass(user):
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT * password FROM users WHERE username =  ?")
+    c.execute("SELECT * password FROM users WHERE username =  ?" )
     return c.fetchone()
 
 def getCreatedMemes(username):
@@ -107,13 +61,13 @@ def getCreatedMemes(username):
     c.execute("SELECT id FROM users WHERE username = ?", (username,))
     result = c.fetchone()
     c.execute("SELECT meme FROM memes WHERE user_id =?", (result,))
-    return result[0] if result else None
+    return c.fetchall()
 
 # Gets a list of all blognames (no entries)
 def listAllMemes():
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT blogname FROM blogs")
+    c.execute("SELECT meme FROM memes")
     return c.fetchall()
 
 # Deletes a blog
@@ -125,14 +79,14 @@ def deleteMeme(id):
     db.commit()
 
 # Deletes a user
-def deleteUser(username):
+def deleteUser(id):
     db = get_db()
     c = db.cursor()
-    c.execute(f"SELECT blogname FROM users WHERE username = '{username}'")
-    blognames = [row[0] for row in c.fetchall()]
-    for blog in blognames:
-        deleteBlog(blog)
-    c.execute(f"DELETE FROM users WHERE username = '{username}'")
+    c.execute("SELECT meme FROM memes WHERE user_id = ?", (id,))
+    allMemes = [row[0] for row in c.fetchall()]
+    for meme in allMemes:
+        deleteMeme(meme)
+    c.execute("DELETE FROM users WHERE id = ?",(id,))
     exportUsers()
     db.commit()
 
@@ -150,7 +104,14 @@ def exportUsers():
     exportToCSV("SELECT * FROM users", 'users.csv')
 
 def exportMemes():
-    exportToCSV("SELECT * FROM blogs", 'memes.csv')
+    exportToCSV("SELECT * FROM memes", 'memes.csv')
 
 makeDb()
+
+#testing ground
+exportMemes()
+
+
+
+
 db.close()
