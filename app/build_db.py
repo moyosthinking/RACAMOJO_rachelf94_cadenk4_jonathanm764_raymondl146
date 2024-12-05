@@ -14,7 +14,7 @@ def get_db():
 def makeDb():
     db = get_db()
     c = db.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL UNIQUE, password TEXT NOT NULL)")
+    c.execute("CREATE TABLE IF NOT EXISTS users (username TEXT NOT NULL UNIQUE, password TEXT NOT NULL)")
     c.execute("CREATE TABLE IF NOT EXISTS memes (id INTEGER PRIMARY KEY AUTOINCREMENT, image BLOB, upvotes INTEGER, user_id INTEGER, FOREIGN KEY(user_id) REFERENCES users(id))")
     db.commit()
 
@@ -22,7 +22,7 @@ def makeDb():
 def addUser(u, p):
     db = get_db()
     c = db.cursor()
-    c.execute("INSERT INTO users (username, password) VALUES (?, ?)")
+    c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (u,p))
     exportUsers()
     db.commit()
 
@@ -30,7 +30,7 @@ def addUser(u, p):
 def addMeme(img, userId):
     db = get_db()
     c = db.cursor()
-    c.execute("INSERT INTO memes (image, upvotes, id) VALUES (?,0,?)")
+    c.execute("INSERT INTO memes (image, upvotes, id) VALUES (?,0,?)",(img,userID))
     exportBlogs()
     db.commit()
 
@@ -52,8 +52,9 @@ def getMeme(id):
 def getPass(user):
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT * password FROM users WHERE username =  ?" )
+    c.execute("SELECT password FROM users WHERE username =  ?",(user,))
     return c.fetchone()
+
 
 def getCreatedMemes(username):
     db = get_db()
@@ -109,9 +110,6 @@ def exportMemes():
 makeDb()
 
 #testing ground
-exportMemes()
-
-
 
 
 db.close()
