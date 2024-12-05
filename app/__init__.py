@@ -1,9 +1,7 @@
 from flask import Flask, render_template, session, request, flash, redirect
 import sqlite3
-import key
 
 app = Flask(__name__)
-app.secret_key = key.key()
 
 DB_FILE="user.db"
 db = sqlite3.connect(DB_FILE, check_same_thread=False) #open if file exists, otherwise create
