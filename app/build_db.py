@@ -15,7 +15,7 @@ def makeDb():
     db = get_db()
     c = db.cursor()
     c.execute("CREATE TABLE IF NOT EXISTS users (username TEXT NOT NULL UNIQUE, password TEXT NOT NULL)")
-    c.execute("CREATE TABLE IF NOT EXISTS memes (id INTEGER PRIMARY KEY AUTOINCREMENT, image BLOB, upvotes INTEGER, user_id INTEGER, FOREIGN KEY(user_id) REFERENCES users(id))")
+    c.execute("CREATE TABLE IF NOT EXISTS memes (id INTEGER PRIMARY KEY AUTOINCREMENT, image BLOB, upvotes INTEGER, creatingUsername TEXT NOT NULL, FOREIGN KEY (creatingUsername) REFERENCES users (username))")
     db.commit()
 
 # Registers a user with a username and password
@@ -27,25 +27,25 @@ def addUser(u, p):
     db.commit()
 
 # Adds a meme to the database
-def addMeme(img, userId):
+def addMeme(img, user):
     db = get_db()
     c = db.cursor()
-    c.execute("INSERT INTO memes (image, upvotes, id) VALUES (?,0,?)",(img,userID))
+    c.execute("INSERT INTO memes (image, upvotes, username) VALUES (?,0,?)",(img,username))
     exportBlogs()
     db.commit()
 
 # Gets a list of entries for a specific blog given the blog name
-def getMeme(id):
+def getUserMemes(username):
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT title, entry, date FROM entries WHERE blogname = ?", (id,))
+    c.execute("SELECT image, upvotes FROM memes WHERE creatingUsername = ?", (username,))
     return c.fetchall()
 
 # Gets a specific entry based on title
 def getMeme(id):
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT image, upvotes, date FROM memes WHERE id = ?", (id,))
+    c.execute("SELECT image, upvotes FROM memes WHERE id = ?", (id,))
     return c.fetchone()  # This returns the first matching row, or None if no match is found
 
 # Gets the user's password (for verification purposes)
@@ -55,23 +55,14 @@ def getPass(user):
     c.execute("SELECT password FROM users WHERE username =  ?",(user,))
     return c.fetchone()
 
-
-def getCreatedMemes(username):
-    db = get_db()
-    c = db.cursor()
-    c.execute("SELECT id FROM users WHERE username = ?", (username,))
-    result = c.fetchone()
-    c.execute("SELECT meme FROM memes WHERE user_id =?", (result,))
-    return c.fetchall()
-
-# Gets a list of all blognames (no entries)
+# Gets a list of all memes
 def listAllMemes():
     db = get_db()
     c = db.cursor()
     c.execute("SELECT meme FROM memes")
     return c.fetchall()
 
-# Deletes a blog
+# Deletes a meme
 def deleteMeme(id):
     db = get_db()
     c = db.cursor()
@@ -80,14 +71,14 @@ def deleteMeme(id):
     db.commit()
 
 # Deletes a user
-def deleteUser(id):
+def deleteUser(user):
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT meme FROM memes WHERE user_id = ?", (id,))
+    c.execute("SELECT meme FROM memes WHERE creatingUsername = ?", (user,))
     allMemes = [row[0] for row in c.fetchall()]
     for meme in allMemes:
         deleteMeme(meme)
-    c.execute("DELETE FROM users WHERE id = ?",(id,))
+    c.execute("DELETE FROM users WHERE username = ?",(user,))
     exportUsers()
     db.commit()
 
