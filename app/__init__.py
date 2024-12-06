@@ -76,6 +76,10 @@ def reading():
 
     return render_template('reading.html', blogs=blogs)
 
+@app.route("/homepage")
+def home():
+    return render_template('homepage.html')
+
 if __name__ == "__main__":
     app.debug = True
     app.run()
