@@ -15,7 +15,8 @@ def makeDb():
     db = get_db()
     c = db.cursor()
     c.execute("CREATE TABLE IF NOT EXISTS users (username TEXT NOT NULL UNIQUE, password TEXT NOT NULL)")
-    c.execute("CREATE TABLE IF NOT EXISTS memes (id INTEGER PRIMARY KEY AUTOINCREMENT, image BLOB, upvotes INTEGER, creatingUsername TEXT NOT NULL, FOREIGN KEY (creatingUsername) REFERENCES users (username))")
+    #change image back into blob later, is text rn for testing purposes
+    c.execute("CREATE TABLE IF NOT EXISTS memes (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT, upvotes INTEGER, creatingUsername TEXT NOT NULL, FOREIGN KEY (creatingUsername) REFERENCES users (username))")
     db.commit()
 
 # Registers a user with a username and password
@@ -30,8 +31,8 @@ def addUser(u, p):
 def addMeme(img, user):
     db = get_db()
     c = db.cursor()
-    c.execute("INSERT INTO memes (image, upvotes, username) VALUES (?,0,?)",(img,username))
-    exportBlogs()
+    c.execute("INSERT INTO memes (image, upvotes, creatingUsername) VALUES (?,0,?)",(img,user,))
+    exportMemes()
     db.commit()
 
 # Gets a list of entries for a specific blog given the blog name
@@ -41,7 +42,7 @@ def getUserMemes(username):
     c.execute("SELECT image, upvotes FROM memes WHERE creatingUsername = ?", (username,))
     return c.fetchall()
 
-# Gets a specific entry based on title
+# Gets a specific meme based on id
 def getMeme(id):
     db = get_db()
     c = db.cursor()
@@ -81,6 +82,12 @@ def deleteUser(user):
     c.execute("DELETE FROM users WHERE username = ?",(user,))
     exportUsers()
     db.commit()
+#upvotes a meme
+def upvote(id):
+    db = get_db()
+    c = db.cursor()
+    c.execute("UPDATE memes SET upvotes = upvotes + 1 WHERE id = ?", (id,))
+    db.commit()
 
 # Helper function to export data to CSV
 def exportToCSV(query, filename):
@@ -102,5 +109,8 @@ makeDb()
 
 #testing ground
 
-
+addMeme("haha so funny","ooga")
+print(getMeme(1))
+upvote(1)
+print(getMeme(1))
 db.close()
