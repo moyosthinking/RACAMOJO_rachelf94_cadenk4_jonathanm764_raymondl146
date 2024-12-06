@@ -39,14 +39,14 @@ def addMeme(img, user):
 def getUserMemes(username):
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT image, upvotes FROM memes WHERE creatingUsername = ?", (username,))
+    c.execute("SELECT id, image, upvotes FROM memes WHERE creatingUsername = ?", (username,))
     return c.fetchall()
 
 # Gets a specific meme based on id
 def getMeme(id):
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT image, upvotes FROM memes WHERE id = ?", (id,))
+    c.execute("SELECT id, image, upvotes, creatingUsername FROM memes WHERE id = ?", (id,))
     return c.fetchone()  # This returns the first matching row, or None if no match is found
 
 # Gets the user's password (for verification purposes)
@@ -60,10 +60,10 @@ def getPass(user):
 def listAllMemes():
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT meme FROM memes")
+    c.execute("SELECT id, image, upvotes, creatingUsername FROM memes")
     return c.fetchall()
 
-# Deletes a meme
+# Deletes a meme, helper function only
 def deleteMeme(id):
     db = get_db()
     c = db.cursor()
@@ -109,8 +109,12 @@ makeDb()
 
 #testing ground
 
-addMeme("haha so funny","ooga")
+#print(getMeme(1))
+#upvote(1)
 print(getMeme(1))
-upvote(1)
-print(getMeme(1))
+
+print(listAllMemes())
+deleteMeme(5)
+print(listAllMemes())
+
 db.close()
