@@ -37,8 +37,8 @@ Tailwind CSS and Homepage and Readme for keys
 cadenK -- 2024-12-04 11:05
 Work on __init__.py and working on attaching all the HTML pages to it
 
-jonathanM -- 2024-12-04 11:40
-Worked on old Code
+jonathanM -- 2024-12-04 11:43
+Worked on database
 
 moyoF  -- 2024-12-04 22:30
 Added Launch Codes and Install Guide to Readme
@@ -46,14 +46,32 @@ Added Launch Codes and Install Guide to Readme
 raymondL -- 2024-12-05 11:13
 Worked on requirements.txt
 
-cadenK  -- 2024-12-04 11:17
-Worked on Flask
+jonathanM -- 2024-12-05 11:43
+Worked on database % got basic login functions working
 
-jonathanM -- 2024-12-04 11:43
-Worked on database
+jonathanM -- 2024-12-06 11:36
+Worked on Upvote
+
+raymondL -- 2024-12-06 11:39
+Created meme done page
+
+jonathanM -- 2024-12-06 11:46
+Tested delete meme
+
+cadenK -- 2024-12-06 11:46
+Updated login
+
+moyoF  -- 2024-12-08 22:59
+Made config.py for APIs
+
+jonathanM -- 2024-12-09 11:19
+Updated comments
 
 cadenK -- 2024-12-09 11:23
 Fixed redirect to register page
 
 raymondL -- 2024-12-09 11:31
 Finished the css
+
+moyoF  -- 2024-12-09 11:46
+Worked on meme gallery
