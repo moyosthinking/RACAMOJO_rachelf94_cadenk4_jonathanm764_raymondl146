@@ -58,6 +58,11 @@ def logout():
     session.pop('username', None)
     return redirect('/')
 
+@app.route("/register")
+def register():
+    return render_template("register.html")
+
+
 @app.route("/entry", methods=['GET', 'POST'])
 def createBlog():
     if 'username' not in session:
