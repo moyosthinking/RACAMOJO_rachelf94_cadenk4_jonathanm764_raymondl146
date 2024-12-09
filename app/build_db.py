@@ -1,3 +1,9 @@
+# RACAMOJO -
+# SoftDev
+# P01
+# 2024-12-03
+# time spent: 1.5 hrs
+
 import sqlite3
 import csv
 

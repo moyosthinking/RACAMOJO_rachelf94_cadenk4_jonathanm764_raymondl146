@@ -1,16 +1,53 @@
 jonathanM -- 2024-11-26 11:42
-* Worked on the design doc
+Worked on the design doc
+
 raymondL -- 2024-11-26 11:33
-* Worked on the design doc
+Worked on the design doc
+
 moyoF -- 2024-11-26 11:35
-* Worked on the design doc
+Worked on the design doc
+
 cadenK -- 2024-11-26 11:40
-* Worked on the design doc
+Worked on the design doc
+
 moyoF -- 2024-12-02 21:42
-* Uploaded Site Map on the Design Doc
+Uploaded Site Map on the Design Doc
+
 raymondL -- 2024-12-02 21:18
-* Fixed website description
+Fixed website description
+
 jonathanM -- 2024-12-02 20:09
-* Created Database Table
+Created Database Table
+
 cadenK -- 2024-12-02 19:32
-* Added more descriptions for the API's used
+Added more descriptions for the API's used
+
+raymondL -- 2024-12-03 11:55
+Worked on templates + heading and static
+
+jonathanM -- 2024-12-03 11:55
+Started on Database
+
+cadenK  -- 2024-12-03 11:55
+Started on init.py
+
+moyoF  -- 2024-12-03 11:55
+Tailwind CSS and Homepage and Readme for keys
+
+cadenK -- 2024-12-04 11:05
+Work on __init__.py and working on attaching all the HTML pages to it
+
+jonathanM -- 2024-12-04 11:40
+Worked on old Code
+
+moyoF  -- 2024-12-04 22:30
+Added Launch Codes and Install Guide to Readme
+
+raymondL -- 2024-12-05 11:13
+Worked on requirements.txt
+
+cadenK  -- 2024-12-04 11:17
+Worked on Flask
+
+jonathanM -- 2024-12-04 11:43
+Worked on database

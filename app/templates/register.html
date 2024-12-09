@@ -1,0 +1,31 @@
+<!--
+RACAMOJO -
+SoftDev
+P01
+2024-12-03
+time spent: 15 mins
+-->
+
+<head>
+    <link rel="stylesheet" href="static/styles.css">
+</head>
+ <form action="/register" method = "POST">
+  <div class="container">
+    <h1>Register</h1>
+    <p>Create an account</p>
+    <hr>
+
+    <label for="username"><b>Username</b></label>
+    <input type="text" placeholder="Enter Username" required id="username" name="username" >
+
+    <label for="password"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" required id="password" name="password">
+
+
+    <button type="submit" class="registerbtn">Register</button>
+  </div>
+
+  <div class="container signin">
+    <p>Already have an account? <a href="login">Sign in</a></p>
+  </div>
+</form>
