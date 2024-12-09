@@ -35,7 +35,7 @@ def addMeme(img, user):
     exportMemes()
     db.commit()
 
-# Gets a list of entries for a specific blog given the blog name
+# Gets a list of all memes created by a user
 def getUserMemes(username):
     db = get_db()
     c = db.cursor()
