@@ -53,7 +53,7 @@ def create():
             flash("Username already exists. Choose a different one.", "error")
             return render_template('create_meme.html')
     return render_template('create_meme.html')
-@app.route("/")
+@app.route("/logout")
 def logout():
     session.pop('username', None)
     return redirect('/')
