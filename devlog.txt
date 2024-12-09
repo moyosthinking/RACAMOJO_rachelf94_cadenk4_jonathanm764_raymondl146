@@ -51,3 +51,6 @@ Worked on Flask
 
 jonathanM -- 2024-12-04 11:43
 Worked on database
+
+cadenK -- 2024-12-09 11:23
+Fixed redirect to register page
