@@ -4,7 +4,7 @@
 # 2024-12-03
 # time spent: 0.5 hrs
 
-import os
+import os, build_db
 
 def findKey(file):
     path = os.path.join(os.getcwd(),"keys", file)
@@ -16,3 +16,9 @@ def findKey(file):
 
 googleFonts_Key = findKey("key_GoogleFonts.txt")
 randomImage_Key = findKey("key_RandomImage.txt")
+
+memes = build_db.listAllMemes()
+
+
+# print("-----")
+# print(memeShow(memes))
