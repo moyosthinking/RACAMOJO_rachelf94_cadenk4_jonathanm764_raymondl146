@@ -1,3 +1,9 @@
+# RACAMOJO -
+# SoftDev
+# P01
+# 2024-12-03
+# time spent: 1 hrs
+
 from flask import Flask, render_template, session, request, flash, redirect
 import sqlite3
 
@@ -75,6 +81,10 @@ def reading():
     blogs = c.fetchall()
 
     return render_template('reading.html', blogs=blogs)
+
+@app.route("/homepage")
+def home():
+    return render_template('homepage.html')
 
 if __name__ == "__main__":
     app.debug = True
