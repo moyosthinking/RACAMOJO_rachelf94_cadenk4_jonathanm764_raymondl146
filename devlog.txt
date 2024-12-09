@@ -54,3 +54,6 @@ Worked on database
 
 cadenK -- 2024-12-09 11:23
 Fixed redirect to register page
+
+raymondL -- 2024-12-09 11:31
+Finished the css
