@@ -25,26 +25,31 @@ def makeDb():
     c.execute("CREATE TABLE IF NOT EXISTS memes (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT, upvotes INTEGER, creatingUsername TEXT NOT NULL, FOREIGN KEY (creatingUsername) REFERENCES users (username))")
     db.commit()
 
-# Registers a user with a username and password,returns false if username is already taken, returns true otherwise
+# Registers a user with a username and password,returns false if username is already taken or is null, returns true otherwise
 def addUser(u, p):
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT username FROM users WHERE username = ?", (u,))
+    c.execute("SELECT FROM users WHERE username = ?", (u,))
     if c.fetchone() is not None:  # If the username already exists
         return False  # Return False
     else: #else add user
+        if(u is None or p is None):
+            return False
         c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (u, p))
         exportUsers()
         db.commit()
         return True
 
-# Adds a meme to the database
+# Adds a meme to the database, returns False if meme or user is null, returns true otherwise
 def addMeme(img, user):
+    if(img is None or user is None):
+        return False
     db = get_db()
     c = db.cursor()
     c.execute("INSERT INTO memes (image, upvotes, creatingUsername) VALUES (?,0,?)",(img,user,))
     exportMemes()
     db.commit()
+    return True
 
 # Gets a list of all memes created by a user, returns a list of all memes
 def getUserMemes(username):
@@ -61,11 +66,12 @@ def getMeme(id):
     return c.fetchone()  # This returns the first matching row, or None if no match is found
 
 # checks the user's password, if it matches return true, else return false
-def checkPass(user, pass):
+def checkPass(user, p):
     db = get_db()
     c = db.cursor()
+
     c.execute("SELECT password FROM users WHERE username =  ?",(user,))
-    if c.fetchone() is pass:
+    if c.fetchone() is p:
         return True
     else:
         return False
@@ -85,10 +91,13 @@ def deleteMeme(id):
     exportMemes()
     db.commit()
 
-# Deletes a user
+# Deletes a user, returns false if user doesn't exist
 def deleteUser(user):
     db = get_db()
     c = db.cursor()
+    e.execute("SELECT FROM users WHERE username= ?",(user,))
+    if c.fetchone() is None:
+        return False
     c.execute("SELECT meme FROM memes WHERE creatingUsername = ?", (user,))
     allMemes = [row[0] for row in c.fetchall()]
     for meme in allMemes:
@@ -96,6 +105,7 @@ def deleteUser(user):
     c.execute("DELETE FROM users WHERE username = ?",(user,))
     exportUsers()
     db.commit()
+    return True
 
 #upvotes a meme, returns false if meme doesnt exist
 def upvote(id):
@@ -128,8 +138,5 @@ def exportMemes():
 makeDb()
 
 #testing ground
-
-#addUser("ooga","booga")
-#addUser("ooga","1234")
 
 db.close()
