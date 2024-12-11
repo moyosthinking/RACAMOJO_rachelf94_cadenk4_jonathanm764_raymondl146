@@ -94,7 +94,7 @@ def reading():
 
 @app.route("/homepage")
 def home():
-    return render_template('homepage.html')
+    return render_template('homepage.html', memes = build_db.listAllmemes(), images = [])
 
 if __name__ == "__main__":
     app.debug = True

@@ -26,9 +26,17 @@ time spent: 1 hrs
           <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg" alt="">
         </div> -->
     </div>
+    {% for meme in memes %}
+      {image = meme[1]}
+      {images.append(image)}
+    {% endfor %}
+
+    {% for image in images %}
+      {{ image }}
+    {% endfor %}
 
     <!-- PyScript Example -->
-    <py-script>
+    <!-- <py-script>
         import build_db, config
 
         def memeShow(memes):
@@ -37,8 +45,7 @@ time spent: 1 hrs
                 image = meme[1]
                 images.append(image)
             return images
-    </py-script>
+    </py-script> -->
 </body>
 
 </html>
-
