@@ -41,6 +41,8 @@ def addUser(u, p):
         return True
 
 # Adds a meme to the database, returns False if meme or user is null, returns true otherwise
+#the image should be stored as a string which links to the image
+#parameters being string, string, with the first being the link to the image, and the second being the username
 def addMeme(img, user):
     if(img is None or user is None):
         return False
@@ -55,6 +57,7 @@ def addMeme(img, user):
     return True
 
 # Gets a list of all memes created by a user, returns a list of all memes
+#parameters: String which is the username
 def getUserMemes(username):
     db = get_db()
     c = db.cursor()
@@ -62,6 +65,7 @@ def getUserMemes(username):
     return c.fetchall()
 
 # Gets a specific meme based on id and returns it
+#Parameters: integer which is the meme id
 def getMeme(id):
     db = get_db()
     c = db.cursor()
@@ -69,6 +73,7 @@ def getMeme(id):
     return c.fetchone()  # This returns the first matching row, or None if no match is found
 
 # checks the user's password, if it matches return true, else return false
+#Parameters: String, String, with them being the username and password respectively
 def checkPass(user, p):
     db = get_db()
     c = db.cursor()
@@ -85,7 +90,7 @@ def getAllMemes():
     c.execute("SELECT id, image, upvotes, creatingUsername FROM memes")
     return c.fetchall()
 
-# Deletes a meme, helper function only
+# Deletes a meme, helper function only DO NOT CALL OUTSIDE
 def deleteMeme(id):
     db = get_db()
     c = db.cursor()
@@ -94,6 +99,7 @@ def deleteMeme(id):
     db.commit()
 
 # Deletes a user, returns false if user doesn't exist
+#Parameters: String, which is the username
 def deleteUser(user):
     db = get_db()
     c = db.cursor()
@@ -110,6 +116,7 @@ def deleteUser(user):
     return True
 
 #upvotes a meme, returns false if meme doesnt exist
+#parameters: integer which is the meme id
 def upvote(id):
     db = get_db()
     c = db.cursor()
