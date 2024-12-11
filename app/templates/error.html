@@ -7,21 +7,22 @@ P01
 time spent: 30 mins
 -->
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error!</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans text-center leading-relaxed">
+  <h1 class="text-4xl font-bold text-red-500 mt-10">{{error}}</h1>
 
-  <head>
-    <title> Error! </title>
-    <link rel="stylesheet" href="static/style.css">
-  </head>
-
-  <body>
-    <h1>
-       {{error}}
-    </h1>
-    <p>
-        <a href="login">Go Back to Log In</a>
-    </p>
-    <p>
-        <a href="/">Go Back to Register </a>
-    </p>
-  </body>
+  <p class="mt-6">
+    <a href="login" class="text-blue-400 hover:text-blue-600 underline">Go Back to Log In</a>
+  </p>
+  <p class="mt-4">
+    <a href="/" class="text-blue-400 hover:text-blue-600 underline">Go Back to Register</a>
+  </p>
+</body>
+</html>

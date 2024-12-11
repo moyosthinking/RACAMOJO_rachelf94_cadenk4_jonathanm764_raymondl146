@@ -7,22 +7,19 @@ P01
 time spent: 15 mins
 -->
 
-
-<html>
-
+<html lang="en" class="dark">
   <head>
-    <title> Logout </title>
-    <link rel="stylesheet" href="static/styles.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-
-  <body>
-    <h1>
-      Thank you for visiting!
-    </h1>
-    <form id = "logout" action="/" method="POST">
-        <button type="submit">Back to Register and Login</button>
-    </form>
+  <body class="bg-gray-900 text-gray-100 font-sans flex items-center justify-center min-h-screen">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold mb-6">Thank you for visiting!</h1>
+      <form id="logout" action="/" method="POST">
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">Back to Register and Login</button>
+      </form>
+    </div>
   </body>
-
 </html>

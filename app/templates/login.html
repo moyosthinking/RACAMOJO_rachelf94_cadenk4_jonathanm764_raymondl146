@@ -7,25 +7,29 @@ P01
 time spent: 30 mins
 -->
 
-<html>
+<html lang="en" class="dark">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Log In</title>
-  <link rel="stylesheet" href="static/styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>RACAMOJO Meme Randomizer</h1>
-  <h3>Enter your username and password below to proceed.</h3>
+<body class="bg-gray-900 text-gray-100 font-sans">
+  <h1 class="text-4xl font-bold text-center my-6">RACAMOJO Meme Randomizer</h1>
+  <h3 class="text-xl text-center mb-6">Enter your username and password below to proceed.</h3>
 
-  <form id = "login" action="/check_login" method="POST">
-    <label for="usernameLN">Username:</label><br>
-    <input type="text" required id="username" name="username"> <br><br>
-    <label for="passwordLN">Password:</label><br>
-    <input type="password" required id="password" name="password"> <br><br>
-    <input type="submit" name="sub1" value="Login">
+  <form id="login" action="/check_login" method="POST" class="bg-gray-800 p-6 max-w-md mx-auto rounded-lg shadow-md">
+    <label for="usernameLN" class="block text-gray-300 font-semibold mb-2">Username:</label>
+    <input type="text" required id="username" name="username" class="w-full p-2 mb-4 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+
+    <label for="passwordLN" class="block text-gray-300 font-semibold mb-2">Password:</label>
+    <input type="password" required id="password" name="password" class="w-full p-2 mb-4 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+
+    <input type="submit" name="sub1" value="Login" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
   </form>
 
-  <div>
-    <p>Don't have an account? <a id="reg" href="/register">Register here</a></p>
+  <div class="text-center mt-4">
+    <p class="text-gray-400">Don't have an account? <a id="reg" href="/register" class="text-blue-400 hover:text-blue-500">Register here</a></p>
   </div>
 </body>
 </html>
