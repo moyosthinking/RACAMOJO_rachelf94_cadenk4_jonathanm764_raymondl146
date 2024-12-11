@@ -62,6 +62,11 @@ def logout():
 def register():
     return render_template("register.html")
 
+@app.route("/homepage", methods=['GET', 'POST'])
+def homepage():
+    return render_template("homepage.html")
+
+
 
 @app.route("/entry", methods=['GET', 'POST'])
 def createBlog():
