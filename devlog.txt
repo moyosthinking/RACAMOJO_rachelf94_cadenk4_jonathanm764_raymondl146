@@ -75,3 +75,6 @@ Finished the css
 
 moyoF  -- 2024-12-09 11:46
 Worked on meme gallery
+
+raymondL -- 2024-12-10 10:45
+Finished implementing tailwind on the pages, added the upload image function and will add more features on the homepage when db is finished
