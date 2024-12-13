@@ -7,6 +7,8 @@
 import sqlite3
 import csv
 import os
+import json
+import requests
 
 DB_FILE = "user.db"
 db = sqlite3.connect(DB_FILE, check_same_thread=False)
@@ -128,6 +130,24 @@ def upvote(id):
         db.commit()
         return True
 
+def getRandomImage():
+    # Read API key from file
+    with open('keys/key_RandomImage.txt', 'r') as file:
+        key = file.read().strip()
+
+    api_url = f'https://api.api-ninjas.com/v1/randomimage?category=wildlife'
+
+    response = requests.get(api_url, headers={'X-Api-Key': key})
+
+    # Check if the response was successful
+    if response.status_code == 200:
+        image_url = response.text
+        return image_url
+    else:
+        print(f"Error: {response.status_code}, {response.text}")
+        return None
+
+
 # Helper function to export data to CSV
 def exportToCSV(query, filename):
     db = get_db()
@@ -156,5 +176,14 @@ def exportMemes():
 
 
 makeDb()
+
+# Example usage
+image_url = getRandomImage()
+if image_url:
+    print(f"data:image/jpeg;base64, {image_url}")
+else:
+    print("Failed to get a random image URL.")
+
+
 
 db.close()
