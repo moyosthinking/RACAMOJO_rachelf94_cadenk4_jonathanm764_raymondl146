@@ -72,6 +72,17 @@ def homepage():
 
     return render_template("homepage.html", memes=memes)
 
+@app.route('/generate_meme', methods=['GET'])
+def generate_meme():
+    response = requests.get("http://alpha-meme-maker.herokuapp.com/")
+    
+    if response.status_code == 200:
+        meme_url = response.json().get("url", "")
+        return render_template('meme.html', meme_url=meme_url)
+    else:
+        return jsonify({"error"}), 500
+
+
 @app.route("/create_meme", methods=['GET', 'POST'])
 def create_meme():
     if 'username' not in session:
