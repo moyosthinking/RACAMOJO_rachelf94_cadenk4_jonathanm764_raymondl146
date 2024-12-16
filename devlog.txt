@@ -93,3 +93,6 @@ Worked on python for meme gallery
 
 moyoF  -- 2024-12-12 11:30
 Worked on devlog and desgin doc
+
+cadenK -- 2024-12-15 8:00
+Worked on adding meme maker API
