@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
+<<<<<<< HEAD
 <body class="bg-gray-900 text-gray-100 font-sans">
 
     <!-- Header Section -->
@@ -53,7 +54,41 @@
         </div>
     </main>
 
+=======
+<body class="bg-neutral-300">
+    <h1 class="text-3xl font-bold text-center my-6">
+        Meme Gallery
+    </h1>
+    <div class="grid grid-cols-2 md:grid-cols-7 gap-4">
+        <!-- Uncomment and dynamically generate this with backend data -->
+        <!-- Example Static Images -->
+        <!-- <div>
+          <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg" alt="">
+        </div> -->
+    </div>
+    <py-script>
+    {% for meme in memes %}
+      {image = meme[1]}
+      {images.append(image)}
+    {% endfor %}
+
+    {% for image in images %}
+      {{ image }}
+    {% endfor %}
+</py-script>
+
+    <!-- PyScript Example -->
+    <!-- <py-script>
+        import build_db, config
+
+        def memeShow(memes):
+            images = []
+            for meme in memes:
+                image = meme[1]
+                images.append(image)
+            return images
+    </py-script> -->
+>>>>>>> eeb783bfb2066325a17ae1028fa9914ac7ea48e5
 </body>
 
 </html>
-
