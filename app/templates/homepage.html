@@ -8,53 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<<<<<<< HEAD
-<body class="bg-gray-900 text-gray-100 font-sans">
-
-    <!-- Header Section -->
-    <header class="bg-blue-800 text-white p-6">
-        <div class="flex justify-between items-center">
-            <h1 class="text-4xl font-bold">Meme Showcasings</h1>
-            <div class="flex space-x-4">
-                <!-- Logout Button -->
-                <button class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200">
-                    Logout
-                </button>
-                <!-- Create Meme Button -->
-                <button class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200">
-                    Create Meme
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content Section -->
-    <main class="px-6 py-8">
-        <div class="text-center mb-8">
-            <p class="text-xl font-medium text-gray-300">
-                Browse through your favorite memes or <strong class="text-blue-400">create your own</strong>!
-            </p>
-        </div>
-
-        <!-- Meme Showcase Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            <!-- Static Example Images (These should be replaced with dynamic images from your backend) -->
-            <div class="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-                <img class="h-48 w-full object-cover" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg" alt="Meme">
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold text-gray-100">Funny Meme 1</h3>
-                </div>
-            </div>
-            <!-- More meme images will go here dynamically -->
-        </div>
-
-        <!-- View Memes Link -->
-        <div class="text-center mt-8">
-            <a href="/view-memes" class="text-blue-400 hover:text-blue-500 font-semibold">View All Memes</a>
-        </div>
-    </main>
-
-=======
 <body class="bg-neutral-300">
     <h1 class="text-3xl font-bold text-center my-6">
         Meme Gallery
@@ -66,7 +19,6 @@
           <img class="h-auto max-w-full rounded-lg" src="https://flowbite.s3.amazonaws.com/docs/gallery/square/image.jpg" alt="">
         </div> -->
     </div>
-    <py-script>
     {% for meme in memes %}
       {image = meme[1]}
       {images.append(image)}
@@ -75,20 +27,14 @@
     {% for image in images %}
       {{ image }}
     {% endfor %}
-</py-script>
 
-    <!-- PyScript Example -->
-    <!-- <py-script>
-        import build_db, config
+    <div class="text-center mt-4">
+        <p class="text-black-400">Don't have an account? <a id="reg" href="/auth" class="text-blue-400 hover:text-blue-500">Register here</a></p>
+        <p class="text-black-400">Already have an account? <a href="/" class="text-blue-400 hover:text-blue-500">Sign in</a></p>
+        <p class="text-black-400">Wanna create a meme?<a id="reg" href="/create" class="text-blue-400 hover:text-blue-500"> Click here!</a></p>
+        <p class="text-black-400">Time to say Goodbye? :( <a href="/logout" class="text-blue-400 hover:text-blue-500">Logout</a></p>
+    </div>
 
-        def memeShow(memes):
-            images = []
-            for meme in memes:
-                image = meme[1]
-                images.append(image)
-            return images
-    </py-script> -->
->>>>>>> eeb783bfb2066325a17ae1028fa9914ac7ea48e5
 </body>
 
 </html>

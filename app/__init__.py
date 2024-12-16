@@ -1,14 +1,10 @@
-<<<<<<< HEAD
 # RACAMOJO -
 # SoftDev
 # P01
 # 2024-12-03
 # time spent: 2 hrs
 
-from flask import Flask, render_template, session, request, flash, redirect
-=======
 from flask import Flask, render_template, session, request, flash, redirect, url_for
->>>>>>> eeb783bfb2066325a17ae1028fa9914ac7ea48e5
 import sqlite3
 
 app = Flask(__name__)
@@ -20,29 +16,30 @@ def get_db():
     db = sqlite3.connect(DB_FILE, check_same_thread=False)
     return db
 
-@app.route("/")
-def login():
+@app.route("/",methods=['GET', 'POST'])
+def home():
     if 'username' in session:
         return redirect(url_for('homepage'))
     return render_template("login.html")
 
-@app.route("/auth", methods=['POST'])
+@app.route("/auth", methods=['GET', 'POST'])
 def auth():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
 
-        db = get_db()
+        db = get_db() # can't this be reaplced by addUser
         c = db.cursor()
         c.execute("SELECT * FROM user_information WHERE username = ? AND password = ?", (username, password))
         user = c.fetchone()
-        if user:
-            session['username'] = username
-            flash("Woo! You are logged in.", "success")
-            return redirect(url_for('homepage'))
-        else:
-            flash(":( Try again.", "error")
-            return redirect(url_for('login'))
+        # if user:
+        #     session['username'] = username
+        #     flash("Woo! You are logged in.", "success")
+        #     return redirect(url_for('homepage'))
+        # else:
+        #     flash(":( Try again.", "error")
+        #     return redirect(url_for('login'))
+    return render_template("register.html")
 
 @app.route("/create", methods=['GET', 'POST'])
 def create():
@@ -68,18 +65,14 @@ def create():
 @app.route("/logout")
 def logout():
     session.pop('username', None)
-    return redirect(url_for('login'))
+    return render_template('logout.html')
 
 @app.route("/homepage", methods=['GET', 'POST'])
 def homepage():
-    if 'username' not in session:
-        return redirect(url_for('login'))
-
     db = get_db()
     c = db.cursor()
     c.execute("SELECT id, image, upvotes, creatingUsername FROM memes")
     memes = c.fetchall()
-
     return render_template("homepage.html", memes=memes)
 
 @app.route('/generate_meme', methods=['GET'])
@@ -128,7 +121,7 @@ def upvote_meme(meme_id):
         flash("Meme not found.", "error")
     return redirect(url_for('homepage'))
 
-@app.route("/memes")
+@app.route("/memes") # i dont see how this is different from homepage
 def memes():
     if 'username' not in session:
         return redirect(url_for('login'))
