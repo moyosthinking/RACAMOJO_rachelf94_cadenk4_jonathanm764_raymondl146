@@ -28,18 +28,21 @@ def auth():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        db = get_db() # can't this be reaplced by addUser
+        db = get_db()
         c = db.cursor()
-        c.execute("SELECT * FROM user_information WHERE username = ? AND password = ?", (username, password))
+        c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
         user = c.fetchone()
-        # if user:
-        #     session['username'] = username
-        #     flash("Woo! You are logged in.", "success")
-        #     return redirect(url_for('homepage'))
-        # else:
-        #     flash(":( Try again.", "error")
-        #     return redirect(url_for('login'))
-    return render_template("register.html")
+
+        if user:
+            session['username'] = username
+            flash("Login successful!", "success")
+            return redirect(url_for('homepage'))
+        else:
+            flash("Invalid username or password. Please try again.", "error")
+            return redirect(url_for('home'))  # Redirect to login page on failure
+
+    return render_template("login.html")
+
 
 @app.route("/create", methods=['GET', 'POST'])
 def create():
@@ -47,20 +50,15 @@ def create():
         username = request.form['username']
         password = request.form['password']
 
-        db = get_db()
-        c = db.cursor()
-        try:
-            c.execute('INSERT INTO user_information (username, password) VALUES (?, ?)', (username, password))
-            db.commit()
-            c.execute(f'''CREATE TABLE IF NOT EXISTS {username} (title TEXT, content TEXT, datePublished TEXT)''')
-            db.commit()
-            session['username'] = username
-            flash("Registration successful!", "success")
-            return redirect(url_for('homepage'))
-        except sqlite3.IntegrityError:
-            flash("Username already exists. Choose a different one.", "error")
-            return render_template('create_meme.html')
-    return render_template('create_meme.html')
+        if addUser(username, password):  # Use the addUser function to register the user
+            flash("Registration successful! Please log in.", "success")
+            return redirect(url_for('login'))  # Redirect to the login page
+        else:
+            flash("Username already exists or invalid input. Please try again.", "error")
+            return render_template('register.html')  # Render the registration page again
+
+    return render_template('register.html')
+
 
 @app.route("/logout")
 def logout():

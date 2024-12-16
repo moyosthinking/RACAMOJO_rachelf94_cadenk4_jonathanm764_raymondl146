@@ -23,8 +23,21 @@ def get_db():
 def makeDb():
     db = get_db()
     c = db.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS users (username TEXT NOT NULL UNIQUE, password TEXT NOT NULL)")
-    c.execute("CREATE TABLE IF NOT EXISTS memes (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT, upvotes INTEGER, creatingUsername TEXT NOT NULL, FOREIGN KEY (creatingUsername) REFERENCES users (username))")
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            username TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL
+        )
+    """)
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS memes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            image TEXT,
+            upvotes INTEGER,
+            creatingUsername TEXT NOT NULL,
+            FOREIGN KEY (creatingUsername) REFERENCES users (username)
+        )
+    """)
     db.commit()
 
 # Registers a user with a username and password,returns false if username is already taken or is null, returns true otherwise
