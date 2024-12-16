@@ -73,7 +73,13 @@ def homepage():
     c = db.cursor()
     c.execute("SELECT id, image, upvotes, creatingUsername FROM memes")
     memes = c.fetchall()
-    return render_template("homepage.html", memes=memes)
+    images = []
+    images.append("https://www.southernliving.com/thmb/m3m-JadISxPYjCOcASeSw3mTmI0=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Sunny_Side_Up_Eggs_007-fe57becdb5c4473092cba5e14e407bfc.jpg")
+    for meme in memes:
+        image = meme[1]
+        images.append(image)
+    print(images)
+    return render_template("homepage.html", memes=images)
 
 @app.route('/generate_meme', methods=['GET'])
 def generate_meme():
