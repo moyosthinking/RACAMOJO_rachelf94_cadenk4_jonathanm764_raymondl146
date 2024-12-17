@@ -1,3 +1,9 @@
+# RACAMOJO -
+# SoftDev
+# P01
+# 2024-12-17
+# time spent: 2.5 hrs
+
 from flask import Flask, render_template, session, request, flash, redirect, url_for
 import sqlite3
 import requests
