@@ -10,6 +10,44 @@ import os
 import json
 import requests
 
+MEME_API_URL = "https://api.mememaker.com/v1/memes"
+MEME_API_KEY = "your_api_key_here"  # Replace with your API key
+
+def generate_meme(template_id, top_text, bottom_text):
+    """
+    Generates a meme using the Meme Maker API.
+
+    Args:
+        template_id (str): The ID of the meme template.
+        top_text (str): The text to appear at the top of the meme.
+        bottom_text (str): The text to appear at the bottom of the meme.
+
+    Returns:
+        str: URL of the generated meme if successful, or an error message.
+    """
+    headers = {
+        "Authorization": f"Bearer {MEME_API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    data = {
+        "template_id": template_id,
+        "text0": top_text,
+        "text1": bottom_text
+    }
+
+    try:
+        response = requests.post(MEME_API_URL, headers=headers, json=data)
+        if response.status_code == 200:
+            meme_data = response.json()
+            return meme_data.get("url")  # Return the generated meme URL
+        else:
+            print(f"Error: {response.status_code} - {response.text}")
+            return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+        
 DB_FILE = "user.db"
 db = sqlite3.connect(DB_FILE, check_same_thread=False)
 c = db.cursor()
