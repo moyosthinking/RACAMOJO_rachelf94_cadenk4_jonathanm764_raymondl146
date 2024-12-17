@@ -110,9 +110,7 @@ def homepage():
 @app.route("/create_meme", methods=['GET', 'POST'])
 def create_meme():
     if 'username' not in session:
-<<<<<<< HEAD
         return redirect(url_for('home'))  # Redirect to login if not logged in
-=======
         return redirect(url_for('home'))
     username = session['username']
     
@@ -125,7 +123,6 @@ def create_meme():
     else:
         print(f"Error: {response.status_code} - {response.reason}")
     # api
->>>>>>> 2c7ec21dc0061f29d1e91ae9cdd7cb4cfa2e0f2b
     
     if request.method == 'POST':
         username = session['username']
