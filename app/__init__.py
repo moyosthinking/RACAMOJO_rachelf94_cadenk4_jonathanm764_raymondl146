@@ -1,12 +1,8 @@
 from flask import Flask, render_template, session, request, flash, redirect, url_for
 import sqlite3
-<<<<<<< HEAD
 import requests
 import shutil
 import config
-=======
-import hashlib
->>>>>>> f5e826bc1162d1891024951f4beab36d2187b321
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -52,7 +48,6 @@ def auth():
         c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, hashed_password))
         user = c.fetchone()
 
-<<<<<<< HEAD
 
 # @app.route('/generate_image', methods=['GET', 'POST'])
 # def generate_image():
@@ -76,42 +71,10 @@ def auth():
 
 @app.route("/create", methods=['GET', 'POST'])
 def create():
-=======
-        if user:
-            session['username'] = username
-            flash("Login successful!", "success")
-            return redirect(url_for('homepage'))
-        else:
-            flash("Invalid username or password. Please try again.", "error")
-            return redirect(url_for('home'))  # Redirect to login page on failure
-
-    return render_template("login.html")
-
-
-@app.route("/register", methods=['GET', 'POST'])
-def register():
->>>>>>> f5e826bc1162d1891024951f4beab36d2187b321
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
-<<<<<<< HEAD
-        db = get_db()
-        c = db.cursor()
-        try:
-            c.execute('INSERT INTO user_information (username, password) VALUES (?, ?)', (username, password))
-            db.commit()
-            c.execute(f'''CREATE TABLE IF NOT EXISTS {username} (title TEXT, content TEXT, datePublished TEXT)''')
-            db.commit()
-            session['username'] = username
-            flash("Registration successful!", "success")
-            return redirect(url_for('homepage'))
-        except sqlite3.IntegrityError:
-            flash("Username already exists. Choose a different one.", "error")
-            return render_template('create_meme.html')
-    
-    return render_template('create_meme.html')
-=======
         if not username or not password:
             flash("Both username and password are required.", "error")
             return render_template('register.html')
@@ -125,7 +88,6 @@ def register():
             return render_template('register.html')  # Render the registration page again
 
     return render_template('register.html')
->>>>>>> f5e826bc1162d1891024951f4beab36d2187b321
 
 @app.route("/logout")
 def logout():
@@ -147,10 +109,6 @@ def homepage():
     for meme in memes:
         image = meme[1]
         images.append(image)
-<<<<<<< HEAD
-=======
-
->>>>>>> f5e826bc1162d1891024951f4beab36d2187b321
     return render_template("homepage.html", memes=images)
 
 @app.route("/create_meme", methods=['GET', 'POST'])
@@ -166,18 +124,15 @@ def create_meme():
         if c.fetchone() is None:
             flash("Invalid user", "error")
             return redirect(url_for('create_meme'))
-        
-<<<<<<< HEAD
+        # api
         api_url = 'https://api.api-ninjas.com/v1/randomimage?category'
         api_key = config.randomImage_Key
         response = requests.get(api_url, headers={'X-Api-Key': api_key, 'Accept': 'image/jpg'}, stream=True) # generates a random image
         if response.status_code == requests.codes.ok:
             image_url = response.raw.read()
-            # filename = f'img{count2}.jpg' #creates a file of random image and stores it in current directory
-            # with open(filename, 'wb') as out_file:
-            #     shutil.copyfileobj(response.raw, out_file)
         else:
             print(f"Error: {response.status_code} - {response.reason}")
+        # api
 
         if addMeme(image_url, username):
             flash("Meme created successfully!", "success")
@@ -186,7 +141,6 @@ def create_meme():
             flash("Failed to create meme", "error")
             return redirect(url_for('create_meme'))
     
-=======
     try:
         with urllib.request.urlopen(request) as response:
             data = json.loads(response.read().decode('utf-8'))
@@ -194,7 +148,6 @@ def create_meme():
                 return {"link": data['data']['images']["original"]["url"], "title": data['data']['title']}
             else:
                 return "No image found"
->>>>>>> f5e826bc1162d1891024951f4beab36d2187b321
     return render_template("create_meme.html")
 
 @app.route("/memes")  # i don't see how this is different from homepage
