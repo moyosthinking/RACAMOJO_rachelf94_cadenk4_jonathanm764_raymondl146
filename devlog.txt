@@ -136,6 +136,19 @@ Desgin doc update
 moyoF -- 2024-12-17 01:36
 Devlog
 
+raymondL -- 2024-12-17 1:23
+Fixed the error with redirecting of the login/homepage files
+
+raymondL -- 2024-12-17 1:48
+Implemented all three apis to work 
+
+raymondL -- 2024-12-17 2:02
+Completely finished the redirecting of all files
+
+raymondL -- 2024-12-17 2:20
+Fixed the database so that the project would work
+
+
 Design Doc Revisons:
 - Website Description
 - Componet Map
@@ -147,3 +160,4 @@ Design Doc Revisons:
 - added users & memes csv files
 - added database table visualizations
 - added keys folder with key text files
+- changed apis
