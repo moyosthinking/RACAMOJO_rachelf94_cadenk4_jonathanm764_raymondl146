@@ -1,10 +1,10 @@
 from flask import Flask, render_template, session, request, flash, redirect, url_for
 import sqlite3
-import requests
+#import requests
 import shutil
 import hashlib
 import urllib
-from app import build_db, config
+#from app import build_db, config
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -35,11 +35,20 @@ def home():
         return redirect(url_for('homepage'))
     return render_template("login.html")
 
+def checkPass(user, p):
+    db = get_db()
+    c = db.cursor()
+    expected_password = c.execute("SELECT password FROM users WHERE username =  ?", (user,)).fetchone()[0]
+    actual_password = hashlib.sha256(p.encode()).hexdigest()
+
+    print("expected", expected_password, "actual", actual_password)
+    return expected_password == actual_password
+
 @app.route("/auth", methods=['POST'])
 def auth():
     username = request.form.get('username')
     password = request.form.get('password')
-    success = build_db.checkPass(username, password)
+    success = checkPass(username, password)
 
     if success:
         session['username'] = username
