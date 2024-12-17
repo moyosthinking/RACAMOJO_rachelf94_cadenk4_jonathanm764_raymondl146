@@ -17,7 +17,6 @@ def findKey(file):
 googleFonts_Key = findKey("key_GoogleFonts.txt")
 randomImage_Key = findKey("key_RandomImage.txt")
 
-memes = build_db.listAllMemes()
 
 
 # print("-----")

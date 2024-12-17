@@ -1,9 +1,12 @@
 from flask import Flask, render_template, session, request, flash, redirect, url_for
 import sqlite3
-import hashlib
+import requests
+import shutil
+import config
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
+count = 0
 
 DB_FILE = "user.db" 
 
@@ -41,19 +44,29 @@ def auth():
         c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, hashed_password))
         user = c.fetchone()
 
-        if user:
-            session['username'] = username
-            flash("Login successful!", "success")
-            return redirect(url_for('homepage'))
-        else:
-            flash("Invalid username or password. Please try again.", "error")
-            return redirect(url_for('home'))  # Redirect to login page on failure
 
-    return render_template("login.html")
+# @app.route('/generate_image', methods=['GET', 'POST'])
+# def generate_image():
 
+#     api_url = 'https://api.api-ninjas.com/v1/randomimage?category'
+#     api_key = config.randomImage_Key
+#     response = requests.get(api_url, headers={'X-Api-Key': api_key, 'Accept': 'image/jpg'}, stream=True) # generates a random image
+#     count2 = count + 1
+#     if response.status_code == requests.codes.ok:
+#         image_data = response.raw.read()
+#         username = session['username']
+#         addImage(image_data, username) #stores image data in database
+#         image = getUserMemes(username)
+#         # filename = f'img{count2}.jpg' #creates a file of random image and stores it in current directory
+#         # with open(filename, 'wb') as out_file:
+#         #     shutil.copyfileobj(response.raw, out_file)
+#         return render_template('create_meme.html', image=image)
+#     else:
+#         print(f"Error: {response.status_code} - {response.reason}")
+#     return redirect(url_for('create'))
 
-@app.route("/register", methods=['GET', 'POST'])
-def register():
+@app.route("/create", methods=['GET', 'POST'])
+def create():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -92,25 +105,37 @@ def homepage():
     for meme in memes:
         image = meme[1]
         images.append(image)
-
     return render_template("homepage.html", memes=images)
 
 @app.route("/create_meme", methods=['GET', 'POST'])
 def create_meme():
     if 'username' not in session:
+<<<<<<< HEAD
         return redirect(url_for('home'))  # Redirect to login if not logged in
+=======
+        return redirect(url_for('home'))
+    username = session['username']
+    
+    # api
+    api_url = 'https://api.api-ninjas.com/v1/randomimage?category'
+    api_key = config.randomImage_Key
+    response = requests.get(api_url, headers={'X-Api-Key': api_key, 'Accept': 'image/jpg'}, stream=True) # generates a random image
+    if response.status_code == requests.codes.ok:
+        image_url = response.raw.read() #use this with meme api
+    else:
+        print(f"Error: {response.status_code} - {response.reason}")
+    # api
+>>>>>>> 2c7ec21dc0061f29d1e91ae9cdd7cb4cfa2e0f2b
     
     if request.method == 'POST':
-        image_url = request.form['image_url']
         username = session['username']
-
         db = get_db()
         c = db.cursor()
         c.execute("SELECT username FROM users WHERE username = ?", (username,))
         if c.fetchone() is None:
             flash("Invalid user", "error")
             return redirect(url_for('create_meme'))
-        
+
         if addMeme(image_url, username):
             flash("Meme created successfully!", "success")
             return redirect(url_for('homepage'))  # Redirect to homepage after meme creation
@@ -118,6 +143,13 @@ def create_meme():
             flash("Failed to create meme", "error")
             return redirect(url_for('create_meme'))
     
+    try:
+        with urllib.request.urlopen(request) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            if 'data' in data and data['data']:
+                return {"link": data['data']['images']["original"]["url"], "title": data['data']['title']}
+            else:
+                return "No image found"
     return render_template("create_meme.html")
 
 
