@@ -115,6 +115,17 @@ def homepage():
 def create_meme():
     if 'username' not in session:
         return redirect(url_for('home'))
+    username = session['username']
+    
+    # api
+    api_url = 'https://api.api-ninjas.com/v1/randomimage?category'
+    api_key = config.randomImage_Key
+    response = requests.get(api_url, headers={'X-Api-Key': api_key, 'Accept': 'image/jpg'}, stream=True) # generates a random image
+    if response.status_code == requests.codes.ok:
+        image_url = response.raw.read() #use this with meme api
+    else:
+        print(f"Error: {response.status_code} - {response.reason}")
+    # api
     
     if request.method == 'POST':
         username = session['username']
@@ -124,15 +135,6 @@ def create_meme():
         if c.fetchone() is None:
             flash("Invalid user", "error")
             return redirect(url_for('create_meme'))
-        # api
-        api_url = 'https://api.api-ninjas.com/v1/randomimage?category'
-        api_key = config.randomImage_Key
-        response = requests.get(api_url, headers={'X-Api-Key': api_key, 'Accept': 'image/jpg'}, stream=True) # generates a random image
-        if response.status_code == requests.codes.ok:
-            image_url = response.raw.read()
-        else:
-            print(f"Error: {response.status_code} - {response.reason}")
-        # api
 
         if addMeme(image_url, username):
             flash("Meme created successfully!", "success")
