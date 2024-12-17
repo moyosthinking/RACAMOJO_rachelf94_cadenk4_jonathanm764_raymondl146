@@ -1,14 +1,10 @@
-# RACAMOJO -
-# SoftDev
-# P01
-# 2024-12-17
-# time spent: 2.5 hrs
-
 from flask import Flask, render_template, session, request, flash, redirect, url_for
 import sqlite3
 import requests
 import shutil
-import config
+import hashlib
+import urllib
+from app import build_db, config
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
@@ -23,13 +19,14 @@ def get_db():
 def addUser(username, password):
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT * FROM users WHERE username = ?", (username,))
-    if c.fetchone():
+    existing_users = c.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+    if existing_users is not None:
         return False  # Username already exists
 
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
     c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_password))
     db.commit()
+
     return True
 
 @app.route("/", methods=['GET', 'POST'])
@@ -38,38 +35,59 @@ def home():
         return redirect(url_for('homepage'))
     return render_template("login.html")
 
-@app.route("/auth", methods=['GET', 'POST'])
+@app.route("/auth", methods=['POST'])
 def auth():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
+    username = request.form.get('username')
+    password = request.form.get('password')
+    success = build_db.checkPass(username, password)
 
-        db = get_db()
-        c = db.cursor()
-        hashed_password = hashlib.sha256(password.encode()).hexdigest()
-        c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, hashed_password))
-        user = c.fetchone()
+    if success:
+        session['username'] = username
+        redirect(url_for('homepage'))
 
+    flash("Wrong password!", "error")
+    return redirect(url_for("homepage"))
 
-@app.route("/create", methods=['GET', 'POST'])
-def create():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+# @app.route('/generate_image', methods=['GET', 'POST'])
+# def generate_image():
 
-        if not username or not password:
-            flash("Both username and password are required.", "error")
-            return render_template('register.html')
+#     api_url = 'https://api.api-ninjas.com/v1/randomimage?category'
+#     api_key = config.randomImage_Key
+#     response = requests.get(api_url, headers={'X-Api-Key': api_key, 'Accept': 'image/jpg'}, stream=True) # generates a random image
+#     count2 = count + 1
+#     if response.status_code == requests.codes.ok:
+#         image_data = response.raw.read()
+#         username = session['username']
+#         addImage(image_data, username) #stores image data in database
+#         image = getUserMemes(username)
+#         # filename = f'img{count2}.jpg' #creates a file of random image and stores it in current directory
+#         # with open(filename, 'wb') as out_file:
+#         #     shutil.copyfileobj(response.raw, out_file)
+#         return render_template('create_meme.html', image=image)
+#     else:
+#         print(f"Error: {response.status_code} - {response.reason}")
+#     return redirect(url_for('create'))
 
-        # Validate if username is already taken
-        if addUser(username, password):
-            flash("Registration successful! Please log in.", "success")
-            return redirect(url_for('home')) 
-        else:
-            flash("Username already exists. Please try again.", "error")
-            return render_template('register.html')
-
+@app.route("/register", methods=['GET'])
+def register():
     return render_template('register.html')
+
+@app.route("/create", methods=["POST"])
+def create():
+    username = request.form['username']
+    password = request.form['password']
+
+    if not username or not password:
+        flash("Both username and password are required.", "error")
+        return render_template('register.html')
+
+    # Validate if username is already taken
+    if addUser(username, password):
+        flash("Registration successful! Please log in.", "success")
+        return redirect(url_for('home')) 
+    else:
+        flash("Username already exists. Please try again.", "error")
+        return render_template('register.html')
 
 @app.route("/logout")
 def logout():
@@ -79,8 +97,8 @@ def logout():
 
 @app.route("/homepage", methods=['GET', 'POST'])
 def homepage():
-    # if 'username' not in session:
-    #     return redirect(url_for('home'))
+    if 'username' not in session:
+        return redirect(url_for('home'))
 
     db = get_db()
     c = db.cursor()
@@ -97,9 +115,10 @@ def homepage():
 def create_meme():
     if 'username' not in session:
         return redirect(url_for('home'))  # Redirect to login if not logged in
-        return redirect(url_for('home'))
     username = session['username']
-    
+
+    generate_image()
+
     # api
     api_url = 'https://api.api-ninjas.com/v1/randomimage?category'
     api_key = config.randomImage_Key
@@ -108,10 +127,8 @@ def create_meme():
         image_url = response.raw.read() #use this with meme api
     else:
         print(f"Error: {response.status_code} - {response.reason}")
-    # api
-    
+
     if request.method == 'POST':
-        username = session['username']
         db = get_db()
         c = db.cursor()
         c.execute("SELECT username FROM users WHERE username = ?", (username,))
@@ -133,11 +150,10 @@ def create_meme():
                 return {"link": data['data']['images']["original"]["url"], "title": data['data']['title']}
             else:
                 return "No image found"
-    except KeyError:
-        return "Unexpected response structure - missing expected keys"
+    except Exception as e:
+        print(f"Error: {e}", e)
+
     return render_template("create_meme.html")
-
-
 
 @app.route("/memes") 
 def memes():

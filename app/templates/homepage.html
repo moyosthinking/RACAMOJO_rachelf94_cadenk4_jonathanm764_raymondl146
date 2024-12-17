@@ -1,11 +1,4 @@
 <!DOCTYPE html>
-<!--
-RACAMOJO -
-SoftDev
-P01
-2024-12-17
-time spent: 2 hours
--->
 <html lang="en" class="dark">
 
 <head>
@@ -13,43 +6,34 @@ time spent: 2 hours
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fjord+One&display=swap">
-    <style>
-        body 
-        {
-            font-family: 'Noto Serif', serif;
-        }
-        h1 {
-            font-size: 2.5em;
-            font-weight: bold;
-            text-align: center;
-        }
-        p {
-            font-size: 1.2em;
-            line-height: 1.6;
-        }
-    </style>
 </head>
 
 <body class="bg-blue-600">
+
     <h1 class="text-3xl font-bold text-center my-6 text-white">
         Meme Gallery
     </h1>
 
-    <div class="text-2xl text-center mt-4">
+    <div class="text-xl text-center mt-4">
         <h2 class="text-white"> All Memes </h2>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-7 gap-4">
-        {% for image in memes %}
-        <img class="h-auto max-w-full rounded-lg" src="{{ image }}" alt="meme">
-        {% endfor %}
+    <!-- New Buttons for generating word and image -->
+    <div class="text-center mt-6 space-x-4">
+        <button id="generateWordBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+            Generate Word
+        </button>
+        <button id="generateImageBtn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+            Generate Image
+        </button>
     </div>
 
-    <div class="text-center mt-4">
-        <p class="text-white">Wanna create a meme? 
-            <a href="/create_meme" class="bg-blue-500 text-white hover:bg-blue-600 font-bold py-2 px-4 rounded cursor-pointer mt-4 inline-block">Click here!</a>
-        </p>
+    <!-- Area to display the generated word and image -->
+    <div id="wordContainer" class="text-center mt-6 text-white hidden">
+        <p id="wordText" class="text-xl">"Here will be your word!"</p>
+    </div>
+    <div id="imageContainer" class="text-center mt-6 hidden">
+        <img id="randomImage" src="" alt="Random Image" class="rounded-lg shadow-lg max-w-md mx-auto">
     </div>
 
     <!-- Logout button -->
@@ -58,6 +42,37 @@ time spent: 2 hours
             Logout
         </a>
     </div>
+
+    <script>
+        // Generate a random word using the Random Word API
+        document.getElementById('generateWordBtn').addEventListener('click', function() {
+            fetch('https://random-word-api.herokuapp.com/word?number=1')
+                .then(response => response.json())
+                .then(data => {
+                    const word = data[0];  // Get the first word from the array
+                    document.getElementById('wordText').innerText = `"${word}"`;
+                    document.getElementById('wordContainer').classList.remove('hidden');
+                    document.getElementById('imageContainer').classList.add('hidden');
+                })
+                .catch(error => {
+                    console.error('Error fetching the word:', error);
+                });
+        });
+
+        // Generate a random image using the Lorem Picsum API
+        document.getElementById('generateImageBtn').addEventListener('click', function() {
+            fetch('https://picsum.photos/800/600')
+                .then(response => {
+                    document.getElementById('randomImage').src = response.url;
+                    document.getElementById('imageContainer').classList.remove('hidden');
+                    document.getElementById('wordContainer').classList.add('hidden');
+                })
+                .catch(error => {
+                    console.error('Error fetching the image:', error);
+                });
+        });
+    </script>
+
 </body>
 
 </html>

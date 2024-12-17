@@ -1,7 +1,7 @@
 # RACAMOJO -
 # SoftDev
 # P01
-# 2024-12-17
+# 2024-12-03
 # time spent: 1.5 hrs
 
 import sqlite3
@@ -9,6 +9,7 @@ import csv
 import os
 import json
 import requests
+import hashlib
 
 MEME_API_URL = "https://api.mememaker.com/v1/memes"
 MEME_API_KEY = "your_api_key_here"  # Replace with your API key
@@ -136,11 +137,11 @@ def getMeme(id):
 def checkPass(user, p):
     db = get_db()
     c = db.cursor()
-    c.execute("SELECT password FROM users WHERE username =  ?",(user,))
-    if c.fetchone() is p:
-        return True
-    else:
-        return False
+    expected_password = c.execute("SELECT password FROM users WHERE username =  ?", (user,)).fetchone()[0]
+    actual_password = hashlib.sha256(p.encode()).hexdigest()
+
+    print("expected", expected_password, "actual", actual_password)
+    return expected_password == actual_password
 
 # Gets a list of all memes
 def getAllMemes():
@@ -189,7 +190,7 @@ def upvote(id):
 
 def getRandomImage():
     # Read API key from file
-    with open('keys/key_RandomImage.txt', 'r') as file:
+    with open('app/keys/key_RandomImage.txt', 'r') as file:
         key = file.read().strip()
 
     api_url = f'https://api.api-ninjas.com/v1/randomimage?category=wildlife'
@@ -237,7 +238,8 @@ makeDb()
 # Example usage
 image_url = getRandomImage()
 if image_url:
-    print(f"data:image/jpeg;base64, {image_url}")
+    # print(f"data:image/jpeg;base64, {image_url}")
+    pass
 else:
     print("Failed to get a random image URL.")
 
