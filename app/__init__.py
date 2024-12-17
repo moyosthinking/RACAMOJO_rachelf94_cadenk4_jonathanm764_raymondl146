@@ -45,26 +45,6 @@ def auth():
         user = c.fetchone()
 
 
-# @app.route('/generate_image', methods=['GET', 'POST'])
-# def generate_image():
-
-#     api_url = 'https://api.api-ninjas.com/v1/randomimage?category'
-#     api_key = config.randomImage_Key
-#     response = requests.get(api_url, headers={'X-Api-Key': api_key, 'Accept': 'image/jpg'}, stream=True) # generates a random image
-#     count2 = count + 1
-#     if response.status_code == requests.codes.ok:
-#         image_data = response.raw.read()
-#         username = session['username']
-#         addImage(image_data, username) #stores image data in database
-#         image = getUserMemes(username)
-#         # filename = f'img{count2}.jpg' #creates a file of random image and stores it in current directory
-#         # with open(filename, 'wb') as out_file:
-#         #     shutil.copyfileobj(response.raw, out_file)
-#         return render_template('create_meme.html', image=image)
-#     else:
-#         print(f"Error: {response.status_code} - {response.reason}")
-#     return redirect(url_for('create'))
-
 @app.route("/create", methods=['GET', 'POST'])
 def create():
     if request.method == 'POST':
@@ -93,8 +73,8 @@ def logout():
 
 @app.route("/homepage", methods=['GET', 'POST'])
 def homepage():
-    if 'username' not in session:
-        return redirect(url_for('home'))
+    # if 'username' not in session:
+    #     return redirect(url_for('home'))
 
     db = get_db()
     c = db.cursor()
@@ -147,6 +127,8 @@ def create_meme():
                 return {"link": data['data']['images']["original"]["url"], "title": data['data']['title']}
             else:
                 return "No image found"
+    except KeyError:
+        return "Unexpected response structure - missing expected keys"
     return render_template("create_meme.html")
 
 
