@@ -1,36 +1,29 @@
 <!DOCTYPE html>
-<!--
-RACAMOJO -
-SoftDev
-P01
-2024-12-03
-time spent: 30 mins
--->
-
 <html lang="en" class="dark">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Log In</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-900 text-gray-100 font-sans">
-  <h1 class="text-4xl font-bold text-center my-6">RACAMOJO Meme Randomizer</h1>
-  <h3 class="text-xl text-center mb-6">Enter your username and password below to proceed.</h3>
+    <h1 class="text-4xl font-bold text-center my-6">Meme Gallery</h1>
+    <h2 class="text-xl text-center mb-6">All Memes</h2>
 
-  <form id="login" action="/auth" method="POST" class="bg-gray-800 p-6 max-w-md mx-auto rounded-lg shadow-md">
-    <label for="usernameLN" class="block text-gray-300 font-semibold mb-2">Username:</label>
-    <input type="text" required id="username" name="username" class="w-full p-2 mb-4 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
+    <div class="grid grid-cols-2 md:grid-cols-7 gap-4">
+        {% for image in memes %}
+        <div class="w-full">
+            <img class="h-auto max-w-full rounded-lg shadow-md" src="{{ image }}" alt="meme">
+        </div>
+        {% endfor %}
+    </div>
 
-    <label for="passwordLN" class="block text-gray-300 font-semibold mb-2">Password:</label>
-    <input type="password" required id="password" name="password" class="w-full p-2 mb-4 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none">
-
-    <input type="submit" name="sub1" value="Login" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
-  </form>
-
-  <div class="text-center mt-4">
-    <p class="text-gray-400">Don't have an account? <a href="/register" class="text-blue-400 hover:text-blue-500">Register here</a></p>
-  </div>
-  
+    <div class="text-center mt-6">
+        <p class="text-gray-400">Wanna create a meme? <a href="/create" class="text-blue-400 hover:text-blue-500">Click here!</a></p>
+        <p class="text-gray-400 mt-4">Time to say goodbye? :( <a href="/logout" class="text-blue-400 hover:text-blue-500">Logout</a></p>
+    </div>
 </body>
+
 </html>

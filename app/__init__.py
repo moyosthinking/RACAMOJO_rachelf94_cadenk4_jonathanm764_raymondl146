@@ -5,22 +5,19 @@ import hashlib
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 
-DB_FILE = "user.db"  # Replace with the correct DB file
+DB_FILE = "user.db" 
 
 def get_db():
     db = sqlite3.connect(DB_FILE, check_same_thread=False)
     return db
 
-# Function to add a new user to the database
 def addUser(username, password):
     db = get_db()
     c = db.cursor()
-    # Check if username already exists
     c.execute("SELECT * FROM users WHERE username = ?", (username,))
     if c.fetchone():
         return False  # Username already exists
 
-    # Hash the password before storing it
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
     c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_password))
     db.commit()
@@ -40,7 +37,6 @@ def auth():
 
         db = get_db()
         c = db.cursor()
-        # Hash the password to check against the stored hash
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, hashed_password))
         user = c.fetchone()
@@ -69,10 +65,10 @@ def register():
         # Validate if username is already taken
         if addUser(username, password):
             flash("Registration successful! Please log in.", "success")
-            return redirect(url_for('home'))  # Redirect to login page
+            return redirect(url_for('home')) 
         else:
             flash("Username already exists. Please try again.", "error")
-            return render_template('register.html')  # Render the registration page again
+            return render_template('register.html')
 
     return render_template('register.html')
 
@@ -102,7 +98,7 @@ def homepage():
 @app.route("/create_meme", methods=['GET', 'POST'])
 def create_meme():
     if 'username' not in session:
-        return redirect(url_for('home'))
+        return redirect(url_for('home'))  # Redirect to login if not logged in
     
     if request.method == 'POST':
         image_url = request.form['image_url']
@@ -117,14 +113,16 @@ def create_meme():
         
         if addMeme(image_url, username):
             flash("Meme created successfully!", "success")
-            return redirect(url_for('homepage'))
+            return redirect(url_for('homepage'))  # Redirect to homepage after meme creation
         else:
             flash("Failed to create meme", "error")
             return redirect(url_for('create_meme'))
     
     return render_template("create_meme.html")
 
-@app.route("/memes")  # i don't see how this is different from homepage
+
+
+@app.route("/memes") 
 def memes():
     if 'username' not in session:
         return redirect(url_for('home'))
