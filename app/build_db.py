@@ -23,24 +23,43 @@ def get_db():
 def makeDb():
     db = get_db()
     c = db.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS users (username TEXT NOT NULL UNIQUE, password TEXT NOT NULL)")
-    c.execute("CREATE TABLE IF NOT EXISTS memes (id INTEGER PRIMARY KEY AUTOINCREMENT, image TEXT, upvotes INTEGER, creatingUsername TEXT NOT NULL, FOREIGN KEY (creatingUsername) REFERENCES users (username))")
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            username TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL
+        )
+    """)
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS memes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            image TEXT,
+            upvotes INTEGER,
+            creatingUsername TEXT NOT NULL,
+            FOREIGN KEY (creatingUsername) REFERENCES users (username)
+        )
+    """)
     db.commit()
 
 # Registers a user with a username and password,returns false if username is already taken or is null, returns true otherwise
 def addUser(u, p):
-    db = get_db()
-    c = db.cursor()
-    c.execute("SELECT username FROM users WHERE username = ?", (u,))
-    if c.fetchone() is not None:  # If the username already exists
-        return False  # Return False
-    else: #else add user
-        if(u is None or p is None):
-            return False
-        c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (u, p))
-        exportUsers()
-        db.commit()
-        return True
+    print(f"Adding user: {u}, {p}")  # Debugging print
+    try:
+        db = get_db()
+        c = db.cursor()
+        c.execute("SELECT username FROM users WHERE username = ?", (u,))
+        if c.fetchone() is not None:
+            print("Username already exists.")  # Debugging print
+            return False  # User already exists
+        if u and p:
+            c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (u, p))
+            db.commit()
+            return True
+        print("Invalid input")  # Debugging print
+        return False
+    except Exception as e:
+        print(f"Error in addUser: {e}")  # Error print
+        return False
+
 
 # Adds a meme to the database, returns False if meme or user is null, returns true otherwise
 #the image should be stored as a string which links to the image

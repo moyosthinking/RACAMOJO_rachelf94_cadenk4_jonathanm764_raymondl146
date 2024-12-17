@@ -1,26 +1,39 @@
-# RACAMOJO -
-# SoftDev
-# P01
-# 2024-12-03
-# time spent: 2 hrs
-
 from flask import Flask, render_template, session, request, flash, redirect, url_for
 import sqlite3
+<<<<<<< HEAD
 import requests
 import shutil
 import config
+=======
+import hashlib
+>>>>>>> f5e826bc1162d1891024951f4beab36d2187b321
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 count = 0
 
-DB_FILE = "user.db"
+DB_FILE = "user.db"  # Replace with the correct DB file
 
 def get_db():
     db = sqlite3.connect(DB_FILE, check_same_thread=False)
     return db
 
-@app.route("/",methods=['GET', 'POST'])
+# Function to add a new user to the database
+def addUser(username, password):
+    db = get_db()
+    c = db.cursor()
+    # Check if username already exists
+    c.execute("SELECT * FROM users WHERE username = ?", (username,))
+    if c.fetchone():
+        return False  # Username already exists
+
+    # Hash the password before storing it
+    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+    c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_password))
+    db.commit()
+    return True
+
+@app.route("/", methods=['GET', 'POST'])
 def home():
     if 'username' in session:
         return redirect(url_for('homepage'))
@@ -32,19 +45,14 @@ def auth():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        db = get_db() # can't this be reaplced by addUser
+        db = get_db()
         c = db.cursor()
-        c.execute("SELECT * FROM user_information WHERE username = ? AND password = ?", (username, password))
+        # Hash the password to check against the stored hash
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+        c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, hashed_password))
         user = c.fetchone()
-        # if user:
-        #     session['username'] = username
-        #     flash("Woo! You are logged in.", "success")
-        #     return redirect(url_for('homepage'))
-        # else:
-        #     flash(":( Try again.", "error")
-        #     return redirect(url_for('login'))
-    return render_template("register.html")
 
+<<<<<<< HEAD
 
 # @app.route('/generate_image', methods=['GET', 'POST'])
 # def generate_image():
@@ -68,10 +76,26 @@ def auth():
 
 @app.route("/create", methods=['GET', 'POST'])
 def create():
+=======
+        if user:
+            session['username'] = username
+            flash("Login successful!", "success")
+            return redirect(url_for('homepage'))
+        else:
+            flash("Invalid username or password. Please try again.", "error")
+            return redirect(url_for('home'))  # Redirect to login page on failure
+
+    return render_template("login.html")
+
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+>>>>>>> f5e826bc1162d1891024951f4beab36d2187b321
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
+<<<<<<< HEAD
         db = get_db()
         c = db.cursor()
         try:
@@ -87,14 +111,33 @@ def create():
             return render_template('create_meme.html')
     
     return render_template('create_meme.html')
+=======
+        if not username or not password:
+            flash("Both username and password are required.", "error")
+            return render_template('register.html')
+
+        # Validate if username is already taken
+        if addUser(username, password):
+            flash("Registration successful! Please log in.", "success")
+            return redirect(url_for('home'))  # Redirect to login page
+        else:
+            flash("Username already exists. Please try again.", "error")
+            return render_template('register.html')  # Render the registration page again
+
+    return render_template('register.html')
+>>>>>>> f5e826bc1162d1891024951f4beab36d2187b321
 
 @app.route("/logout")
 def logout():
     session.pop('username', None)
-    return render_template('logout.html')
+    return redirect(url_for('home'))
+
 
 @app.route("/homepage", methods=['GET', 'POST'])
 def homepage():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
     db = get_db()
     c = db.cursor()
     c.execute("SELECT id, image, upvotes, creatingUsername FROM memes")
@@ -104,23 +147,16 @@ def homepage():
     for meme in memes:
         image = meme[1]
         images.append(image)
+<<<<<<< HEAD
+=======
+
+>>>>>>> f5e826bc1162d1891024951f4beab36d2187b321
     return render_template("homepage.html", memes=images)
-
-@app.route('/generate_meme', methods=['GET'])
-def generate_meme():
-    response = requests.get("http://alpha-meme-maker.herokuapp.com/")
-    
-    if response.status_code == 200:
-        meme_url = response.json().get("url", "")
-        return render_template('meme.html', meme_url=meme_url)
-    else:
-        return jsonify({"error"}), 500
-
 
 @app.route("/create_meme", methods=['GET', 'POST'])
 def create_meme():
     if 'username' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
     
     if request.method == 'POST':
         username = session['username']
@@ -131,6 +167,7 @@ def create_meme():
             flash("Invalid user", "error")
             return redirect(url_for('create_meme'))
         
+<<<<<<< HEAD
         api_url = 'https://api.api-ninjas.com/v1/randomimage?category'
         api_key = config.randomImage_Key
         response = requests.get(api_url, headers={'X-Api-Key': api_key, 'Accept': 'image/jpg'}, stream=True) # generates a random image
@@ -149,22 +186,21 @@ def create_meme():
             flash("Failed to create meme", "error")
             return redirect(url_for('create_meme'))
     
+=======
+    try:
+        with urllib.request.urlopen(request) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            if 'data' in data and data['data']:
+                return {"link": data['data']['images']["original"]["url"], "title": data['data']['title']}
+            else:
+                return "No image found"
+>>>>>>> f5e826bc1162d1891024951f4beab36d2187b321
     return render_template("create_meme.html")
 
-@app.route("/upvote_meme/<int:meme_id>")
-def upvote_meme(meme_id):
-    db = get_db()
-    c = db.cursor()
-    if upvote(meme_id):
-        flash("Meme upvoted!", "success")
-    else:
-        flash("Meme not found.", "error")
-    return redirect(url_for('homepage'))
-
-@app.route("/memes") # i dont see how this is different from homepage
+@app.route("/memes")  # i don't see how this is different from homepage
 def memes():
     if 'username' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
 
     db = get_db()
     c = db.cursor()
@@ -177,16 +213,6 @@ def addMeme(image_url, username):
     db = get_db()
     c = db.cursor()
     c.execute("INSERT INTO memes (image, upvotes, creatingUsername) VALUES (?, 0, ?)", (image_url, username))
-    db.commit()
-    return True
-
-def upvote(id):
-    db = get_db()
-    c = db.cursor()
-    c.execute("SELECT * FROM memes WHERE id = ?", (id,))
-    if c.fetchone() is None:
-        return False
-    c.execute("UPDATE memes SET upvotes = upvotes + 1 WHERE id = ?", (id,))
     db.commit()
     return True
 
