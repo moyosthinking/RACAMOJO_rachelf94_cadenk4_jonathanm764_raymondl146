@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
 </head>
 
 <body class="bg-blue-600">
@@ -18,7 +26,6 @@
         <h2 class="text-white"> All Memes </h2>
     </div>
 
-    <!-- New Buttons for generating word and image -->
     <div class="text-center mt-6 space-x-4">
         <button id="generateWordBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
             Generate Word
@@ -28,7 +35,6 @@
         </button>
     </div>
 
-    <!-- Area to display the generated word and image -->
     <div id="wordContainer" class="text-center mt-6 text-white hidden">
         <p id="wordText" class="text-xl">"Here will be your word!"</p>
     </div>
@@ -36,7 +42,20 @@
         <img id="randomImage" src="" alt="Random Image" class="rounded-lg shadow-lg max-w-md mx-auto">
     </div>
 
-    <!-- Logout button -->
+    <div class="text-center mt-6 text-white">
+        <h3 class="text-lg font-semibold">Save Your Favorite Captions</h3>
+        <input type="text" id="captionInput" class="px-4 py-2 mt-2 rounded-lg text-black" placeholder="Enter your favorite caption">
+        <button id="saveCaptionBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded cursor-pointer mt-2">
+            Save Caption
+        </button>
+
+        <div id="savedCaptionsContainer" class="mt-4">
+            <h4 class="text-lg">Saved Captions:</h4>
+            <ul id="savedCaptionsList">
+            </ul>
+        </div>
+    </div>
+
     <div class="text-center mt-4">
         <a href="/logout" class="w-full max-w-xs mx-auto bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer block mt-4">
             Logout
@@ -44,12 +63,11 @@
     </div>
 
     <script>
-        // Generate a random word using the Random Word API
         document.getElementById('generateWordBtn').addEventListener('click', function() {
             fetch('https://random-word-api.herokuapp.com/word?number=1')
                 .then(response => response.json())
                 .then(data => {
-                    const word = data[0];  // Get the first word from the array
+                    const word = data[0]; 
                     document.getElementById('wordText').innerText = `"${word}"`;
                     document.getElementById('wordContainer').classList.remove('hidden');
                     document.getElementById('imageContainer').classList.add('hidden');
@@ -59,7 +77,6 @@
                 });
         });
 
-        // Generate a random image using the Lorem Picsum API
         document.getElementById('generateImageBtn').addEventListener('click', function() {
             fetch('https://picsum.photos/800/600')
                 .then(response => {
@@ -71,6 +88,32 @@
                     console.error('Error fetching the image:', error);
                 });
         });
+
+        document.getElementById('saveCaptionBtn').addEventListener('click', function() {
+            const caption = document.getElementById('captionInput').value;
+            if (caption) {
+                let savedCaptions = JSON.parse(localStorage.getItem('captions')) || [];
+                savedCaptions.push(caption);
+                localStorage.setItem('captions', JSON.stringify(savedCaptions));
+                document.getElementById('captionInput').value = '';
+                displaySavedCaptions();
+            }
+        });
+
+        function displaySavedCaptions() {
+            const savedCaptions = JSON.parse(localStorage.getItem('captions')) || [];
+            const savedCaptionsList = document.getElementById('savedCaptionsList');
+            savedCaptionsList.innerHTML = '';
+
+            savedCaptions.forEach(caption => {
+                const listItem = document.createElement('li');
+                listItem.textContent = caption;
+                savedCaptionsList.appendChild(listItem);
+            });
+        }
+
+
+        window.onload = displaySavedCaptions;
     </script>
 
 </body>
