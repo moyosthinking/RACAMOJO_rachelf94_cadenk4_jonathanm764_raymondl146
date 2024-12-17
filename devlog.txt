@@ -148,6 +148,9 @@ Completely finished the redirecting of all files
 raymondL -- 2024-12-17 2:20
 Fixed the database so that the project would work
 
+raymondL -- 2024-12-17 2:26
+Edited Design Doc
+
 
 Design Doc Revisons:
 - Website Description
@@ -161,3 +164,4 @@ Design Doc Revisons:
 - added database table visualizations
 - added keys folder with key text files
 - changed apis
+- changed design doc based on what we decided to change 
