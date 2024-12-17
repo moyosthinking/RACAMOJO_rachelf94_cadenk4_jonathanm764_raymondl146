@@ -115,13 +115,13 @@ def create_meme():
             flash("Invalid user", "error")
             return redirect(url_for('create_meme'))
         
-        if addMeme(image_url, username):
-            flash("Meme created successfully!", "success")
-            return redirect(url_for('homepage'))
-        else:
-            flash("Failed to create meme", "error")
-            return redirect(url_for('create_meme'))
-    
+    try:
+        with urllib.request.urlopen(request) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            if 'data' in data and data['data']:
+                return {"link": data['data']['images']["original"]["url"], "title": data['data']['title']}
+            else:
+                return "No image found"
     return render_template("create_meme.html")
 
 @app.route("/memes")  # i don't see how this is different from homepage
