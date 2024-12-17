@@ -6,9 +6,13 @@
 
 from flask import Flask, render_template, session, request, flash, redirect, url_for
 import sqlite3
+import requests
+import shutil
+import config
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
+count = 0
 
 DB_FILE = "user.db"
 
@@ -41,6 +45,27 @@ def auth():
         #     return redirect(url_for('login'))
     return render_template("register.html")
 
+
+# @app.route('/generate_image', methods=['GET', 'POST'])
+# def generate_image():
+
+#     api_url = 'https://api.api-ninjas.com/v1/randomimage?category'
+#     api_key = config.randomImage_Key
+#     response = requests.get(api_url, headers={'X-Api-Key': api_key, 'Accept': 'image/jpg'}, stream=True) # generates a random image
+#     count2 = count + 1
+#     if response.status_code == requests.codes.ok:
+#         image_data = response.raw.read()
+#         username = session['username']
+#         addImage(image_data, username) #stores image data in database
+#         image = getUserMemes(username)
+#         # filename = f'img{count2}.jpg' #creates a file of random image and stores it in current directory
+#         # with open(filename, 'wb') as out_file:
+#         #     shutil.copyfileobj(response.raw, out_file)
+#         return render_template('create_meme.html', image=image)
+#     else:
+#         print(f"Error: {response.status_code} - {response.reason}")
+#     return redirect(url_for('create'))
+
 @app.route("/create", methods=['GET', 'POST'])
 def create():
     if request.method == 'POST':
@@ -60,6 +85,7 @@ def create():
         except sqlite3.IntegrityError:
             flash("Username already exists. Choose a different one.", "error")
             return render_template('create_meme.html')
+    
     return render_template('create_meme.html')
 
 @app.route("/logout")
@@ -78,7 +104,6 @@ def homepage():
     for meme in memes:
         image = meme[1]
         images.append(image)
-    print(images)
     return render_template("homepage.html", memes=images)
 
 @app.route('/generate_meme', methods=['GET'])
@@ -98,9 +123,7 @@ def create_meme():
         return redirect(url_for('login'))
     
     if request.method == 'POST':
-        image_url = request.form['image_url']
         username = session['username']
-
         db = get_db()
         c = db.cursor()
         c.execute("SELECT username FROM users WHERE username = ?", (username,))
@@ -108,6 +131,17 @@ def create_meme():
             flash("Invalid user", "error")
             return redirect(url_for('create_meme'))
         
+        api_url = 'https://api.api-ninjas.com/v1/randomimage?category'
+        api_key = config.randomImage_Key
+        response = requests.get(api_url, headers={'X-Api-Key': api_key, 'Accept': 'image/jpg'}, stream=True) # generates a random image
+        if response.status_code == requests.codes.ok:
+            image_url = response.raw.read()
+            # filename = f'img{count2}.jpg' #creates a file of random image and stores it in current directory
+            # with open(filename, 'wb') as out_file:
+            #     shutil.copyfileobj(response.raw, out_file)
+        else:
+            print(f"Error: {response.status_code} - {response.reason}")
+
         if addMeme(image_url, username):
             flash("Meme created successfully!", "success")
             return redirect(url_for('homepage'))
