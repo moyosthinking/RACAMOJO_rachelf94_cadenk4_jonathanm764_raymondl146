@@ -1,11 +1,11 @@
 # Keys Run-Down Readme
 
-## Meme Maker API
+## Random Word API 
 This API doesn't require a Key to use it, therefore, no key text file for it exists.
 ##
 
-## Random Image API
-A key has been created and is stored in the text file key_RandomImage.
+## Picsum Photos API 
+This API doesn't require a Key to use it, therefore, no key text file for it exists.
 ##
 
 ## Google Fonts API
